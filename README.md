@@ -1,4 +1,8 @@
-RO_Ordonnancement-Couplages
-===========================
+RO Ordonnancement - Couplages
+=============================
 
-RO_Ordonnancement-Couplages
+• Build projet :
+          $make
+
+• Run application :
+          $./myApplication
