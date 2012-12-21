@@ -1,7 +1,7 @@
 RO Ordonnancement - Couplages
 =============================
 
-• Build projet :
+• Build project :
           $make
 
 • Run application :
