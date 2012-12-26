@@ -1,10 +1,11 @@
-//
-//  main.c
-//  reecherche_operationel
-//
-//  Created by Cyril_Dupont on 16/11/12.
-//
-//
+
+/**
+ * \file main.cpp
+ * \author  Cyril Dupont
+ * \date    16/11/12
+ * \brief Fichier qui lance le tp de recherche operationel (chargement du graph et recherche des taches aux plus tot et au plus tard )
+ */
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -18,7 +19,13 @@
 
 using namespace std;
 
-//fonction pour spliter une string
+/**
+ * \fn split
+ * \param s String
+ * \param delim String
+ * \param elems liste d'elements
+ * \brief Fonction pour spliter une string
+ */
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
     std::stringstream ss(s);
     std::string item;
@@ -28,7 +35,12 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
     return elems;
 }
 
-//fonction pour spliter une string
+/**
+ * \fn split
+ * \param s String
+ * \param delim String
+ * \brief Fonction pour spliter une string
+ */
 std::vector<std::string> split(const std::string &s, char delim) {
     std::vector<std::string> elems;
     return split(s, delim, elems);
@@ -36,7 +48,12 @@ std::vector<std::string> split(const std::string &s, char delim) {
 
 
 
-
+/**
+ * \fn readFile
+ * \param fileName String
+ * \param diag Diagramme
+ * \brief Lit un fichier passer en parametre afin de crée le diagramme associé
+ */
 int readFile(char ** fileName, Diagramme &diag){
     std::ifstream text;
     text.open(fileName[1]);
@@ -109,6 +126,12 @@ int readFile(char ** fileName, Diagramme &diag){
 }
 
 
+/**
+ * \fn main
+ * \param fileName String
+ * \param outFile String
+ * \brief Fonction de lancement du tp
+ */
 int main(int argc, char** argv) {
     Diagramme diag;
     if(argc>0)
