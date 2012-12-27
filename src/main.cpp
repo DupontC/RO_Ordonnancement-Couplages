@@ -141,7 +141,7 @@ int main(int argc, char** argv) {
         return 0;
     }
     if(argv[2]){
-        diag.init(argv[2]);
+        diag.init(argv[2],argv[3]);
     }else{
         cout << "no file name for file out"<<endl;
     }

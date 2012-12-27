@@ -1,0 +1,150 @@
+-----------------------------------
+CRITICAL PATH
+-----------------------------------
+
+alpha - a - f - R - T - Y - omega - 
+
+
+-----------------------------------
+Nom tache : R
+  cost :7
+  level :3
+  earlyDate :15
+  lateDate :15
+  marge :0
+  Critical :true
+
+-----------------------------------
+Nom tache : T
+  cost :3
+  level :4
+  earlyDate :22
+  lateDate :22
+  marge :0
+  Critical :true
+
+-----------------------------------
+Nom tache : Y
+  cost :3
+  level :4
+  earlyDate :22
+  lateDate :22
+  marge :0
+  Critical :true
+
+-----------------------------------
+Nom tache : a
+  cost :7
+  level :1
+  earlyDate :0
+  lateDate :4
+  marge :4
+  Critical :true
+
+-----------------------------------
+Nom tache : alpha
+  cost :0
+  level :0
+  earlyDate :0
+  lateDate :23
+  marge :23
+  Critical :true
+
+-----------------------------------
+Nom tache : b
+  cost :5
+  level :2
+  earlyDate :7
+  lateDate :16
+  marge :9
+  Critical :false
+
+-----------------------------------
+Nom tache : c
+  cost :1
+  level :3
+  earlyDate :12
+  lateDate :21
+  marge :9
+  Critical :false
+
+-----------------------------------
+Nom tache : d
+  cost :1
+  level :4
+  earlyDate :13
+  lateDate :23
+  marge :10
+  Critical :false
+
+-----------------------------------
+Nom tache : e
+  cost :1
+  level :6
+  earlyDate :20
+  lateDate :24
+  marge :4
+  Critical :false
+
+-----------------------------------
+Nom tache : f
+  cost :8
+  level :2
+  earlyDate :7
+  lateDate :11
+  marge :4
+  Critical :true
+
+-----------------------------------
+Nom tache : g
+  cost :2
+  level :4
+  earlyDate :15
+  lateDate :22
+  marge :7
+  Critical :false
+
+-----------------------------------
+Nom tache : h
+  cost :1
+  level :3
+  earlyDate :15
+  lateDate :19
+  marge :4
+  Critical :false
+
+-----------------------------------
+Nom tache : i
+  cost :2
+  level :4
+  earlyDate :16
+  lateDate :20
+  marge :4
+  Critical :false
+
+-----------------------------------
+Nom tache : j
+  cost :2
+  level :5
+  earlyDate :18
+  lateDate :22
+  marge :4
+  Critical :false
+
+-----------------------------------
+Nom tache : omega
+  cost :0
+  level :7
+  earlyDate :25
+  lateDate :25
+  marge :0
+  Critical :true
+
+-----------------------------------
+Nom tache : z
+  cost :2
+  level :1
+  earlyDate :0
+  lateDate :23
+  marge :23
+  Critical :false

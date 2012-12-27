@@ -13,6 +13,33 @@ using namespace std;
 //construteur
 Diagramme::Diagramme(){}
 
+/**
+ * \fn split
+ * \param s String
+ * \param delim String
+ * \param elems liste d'elements
+ * \brief Fonction pour spliter une string
+ */
+std::vector<std::string> &split2(const std::string &s, char delim, std::vector<std::string> &elems) {
+    std::stringstream ss(s);
+    std::string item;
+    while(std::getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
+}
+
+/**
+ * \fn split
+ * \param s String
+ * \param delim String
+ * \brief Fonction pour spliter une string
+ */
+std::vector<std::string> split2(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    return split2(s, delim, elems);
+}
+
 Tache Diagramme::getHighLevel(){
     std::string highLevelTache="alpha";
     int level=0;
@@ -155,7 +182,6 @@ void Diagramme::updateLateDate(std::string name){
 
 
 void Diagramme::diplayCritiqueWay(std::string fileOut){
-    int i=0;
     std::map<std::string, Tache>::iterator it;
     ofstream fichier(fileOut.c_str(), ios::out|ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
     if(fichier)
@@ -164,7 +190,7 @@ void Diagramme::diplayCritiqueWay(std::string fileOut){
         fichier<<"-----------------------------------"<<endl;
         fichier<<"CRITICAL PATH"<<endl;
         fichier<<"-----------------------------------"<<endl<<endl;
-        for(i;i<=omega.level;i++){
+        for(int i=0;i<=omega.level;i++){
             for(it = TacheList.begin() ; it != TacheList.end(); it++){
                 Tache t=it->second;
                 if(t.level==i && t.critique==true){
@@ -243,13 +269,53 @@ void Diagramme::displayForGraphviz(){
             }
         }
     }
-    
-    
-    
     closeFileGraphviz();
 }
 
-void Diagramme::init(std::string fileout){
+void Diagramme::loadRessource(std::string fileRessource){
+    std::ifstream text;
+    std::string name;
+    text.open(fileRessource.c_str());
+    cout << "ressource file" <<endl;
+    
+    if(text.is_open())
+    {
+        std::string line = "";
+        getline(text, line);
+        while(text.good())
+        {
+            //on recupere chaque ligne du fichier
+            getline(text, line);
+            if(line.length() != 0)
+            {
+                //on recupere les arguments de la ligne
+                cout << line << endl;
+                std::vector<std::string> x = split2(line, ' ');
+                std::vector<std::string>::iterator it;
+                //on parcour les différents elements
+                for (it = x.begin() ; it < x.end(); it++)
+                {
+                    if(it - x.begin() == 0)
+                    {
+                        //name of tache
+                        name = *it;
+                        Tache &tache=getTache2(name);
+                    }else{
+                        Ressource r(*it,false);
+                        Tache &tache=getTache2(name);
+                        //cout << "tache "<< tache.name <<endl;
+                        tache.ressourceDispo.push_back(r);
+                    }
+                }
+            }
+        }
+        text.close();
+    }else{
+        cout << "can't open the resources file" <<endl;
+    }
+}
+
+void Diagramme::init(std::string fileout, std::string ressources){
     //creation du graphe
     addAlpha();
     updateAllLevel();
@@ -277,6 +343,10 @@ void Diagramme::init(std::string fileout){
     cout << "lateDate"<<endl;
     updateLateDate("omega");
     cout << "marge & critical"<<endl;
+    
+    //gestion des ressources &  allocation
+    loadRessource(ressources);
+    
     //gestion des fichiers de sorties
     display(fileout);
     displayForGraphviz();

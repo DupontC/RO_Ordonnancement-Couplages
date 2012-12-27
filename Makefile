@@ -1,5 +1,4 @@
 CXX=g++
-CFLAGS=-Wall -gi
 BIN=potentiel_tache_et_couplage
 
 SRC=$(wildcard src/*.cpp)
@@ -13,7 +12,7 @@ build/%.o: src/%.cpp
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 build/%.d: src/%.cpp
-	$(CC) $(CFLAGS) -MM -MD -o $@ $<
+	$(CC) -MM -MD -o $@ $<
 
 clean:
 	rm -f build/*.o

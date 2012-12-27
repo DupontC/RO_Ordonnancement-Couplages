@@ -11,7 +11,10 @@
 #define reecherche_operationel_diagramme_h
 
 #include <iostream> // pour std::cout
+#include <fstream>
+#include <sstream>
 #include <string>   // pour std::string
+#include "ressource.h"
 #include <map>
 #include <vector>
 #include <stdio.h>
@@ -40,7 +43,8 @@ public:
     void closeFileGraphviz();
     void linkForGraphviz(Tache &,Tache &);
     void displayForGraphviz();
-    void init(std::string);
+    void loadRessource(std::string);
+    void init(std::string,std::string);
     
 };
 

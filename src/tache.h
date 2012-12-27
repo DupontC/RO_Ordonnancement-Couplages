@@ -13,6 +13,7 @@
 #include <string>   // pour std::string
 #include <vector>
 #include <fstream>
+#include "ressource.h"
 
 
 class Tache{
@@ -26,6 +27,9 @@ public:
     int marge;
     bool critique;
     std::vector<std::string> previous;
+    std::vector<Ressource> ressourceDispo;
+    //Ressource ressourceAffecter;
+
    
     Tache(std::string,int,int,int);
     Tache(std::string,int,int,int,std::vector<std::string>);
