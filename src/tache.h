@@ -28,7 +28,7 @@ public:
     bool critique;
     std::vector<std::string> previous;
     std::vector<Ressource> ressourceDispo;
-    //Ressource ressourceAffecter;
+    std::string ressourceAffecter;
 
    
     Tache(std::string,int,int,int);

@@ -14,4 +14,5 @@ Ressource::Ressource(std::string name,bool busy)
 {
     this->name=name;
     this->busy=busy;
+    this->freeDate=0;
 }

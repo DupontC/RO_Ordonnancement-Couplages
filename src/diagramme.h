@@ -25,6 +25,7 @@
 class Diagramme{
 public:
     std::map<std::string,Tache> TacheList;
+    std::map<std::string,Ressource> ressources;
     Diagramme();
     
     Tache getHighLevel();
@@ -32,8 +33,10 @@ public:
     void addAlpha();
     Tache getTache(std::string);
     Tache& getTache2(std::string);
+    Ressource& getRessource(std::string);
     void updateLevel();
     std::vector<std::string> seachNext(std::string );
+    std::vector<Tache> tacheLevel(int);
     void updateAllLevel();
     void updateEarlyDate(std::string );
     void updateLateDate(std::string );
@@ -44,6 +47,8 @@ public:
     void linkForGraphviz(Tache &,Tache &);
     void displayForGraphviz();
     void loadRessource(std::string);
+    std::string getRessourceLibre(Tache);
+    void affectationRessource();
     void init(std::string,std::string);
     
 };

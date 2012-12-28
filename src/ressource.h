@@ -18,6 +18,7 @@
 class Ressource{
 public:
     std::string name;
+    int freeDate;
     bool busy;
     
     Ressource(std::string,bool);

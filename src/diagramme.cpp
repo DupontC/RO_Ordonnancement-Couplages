@@ -56,6 +56,18 @@ Tache Diagramme::getHighLevel(){
     return t;
 }
 
+std::vector<Tache> Diagramme::tacheLevel(int level){
+    std::vector<Tache> tacheLevel;
+    std::map<std::string, Tache>::iterator it;
+    for(it = TacheList.begin() ; it != TacheList.end(); it++){
+        Tache tache = it->second;
+        if(tache.level==level){
+            tacheLevel.push_back(tache);
+        }
+    }
+    return tacheLevel;
+}
+
 void Diagramme::addOmega(){
     int cost=0,nb_succ=0;
     Tache tache=getHighLevel();
@@ -107,6 +119,13 @@ Tache& Diagramme::getTache2(std::string key){
     std::map<std::string, Tache>::iterator it;
     it = TacheList.find(key);
     if(it != TacheList.end())
+        return it->second;
+}
+
+Ressource& Diagramme::getRessource(std::string key){
+    std::map<std::string, Ressource>::iterator it;
+    it = ressources.find(key);
+    if(it != ressources.end())
         return it->second;
 }
 
@@ -275,13 +294,39 @@ void Diagramme::displayForGraphviz(){
 void Diagramme::loadRessource(std::string fileRessource){
     std::ifstream text;
     std::string name;
+    int nb;
+    std::string ress;
     text.open(fileRessource.c_str());
     cout << "ressource file" <<endl;
     
     if(text.is_open())
     {
         std::string line = "";
+        
+        //on recupere le nombre de tache
         getline(text, line);
+        std::vector<std::string> nbRess=split2(line, ' ');
+        std::vector<std::string>::iterator itnbRess;
+        for (itnbRess = nbRess.begin() ; itnbRess < nbRess.end(); itnbRess++)
+        {
+            if(itnbRess - nbRess.begin() == 0)
+            {
+                std::stringstream ss;
+                ss << *itnbRess;
+                ss >> nb;
+            }
+        }
+        //on crée les ressources pour le diagramme
+        for(int i=1;i<=nb;i++){
+            std::stringstream ss;
+            ss << i;
+            ss >> ress;
+            //cout << ress <<endl;
+            Ressource r(ress,false);
+            ressources.insert(pair<std::string, Ressource>(ress,r));
+        }
+        
+        //ensuite on regardes les couplages possible entre les taches et les ressources
         while(text.good())
         {
             //on recupere chaque ligne du fichier
@@ -312,6 +357,86 @@ void Diagramme::loadRessource(std::string fileRessource){
         text.close();
     }else{
         cout << "can't open the resources file" <<endl;
+    }
+}
+
+bool ressourceDispo(std::string name){
+    
+}
+
+int nombreRessourceForTache(Tache t){
+    std::vector<Ressource>::iterator it;
+    int nbRessource=0;
+    for(it = t.ressourceDispo.begin() ; it != t.ressourceDispo.end(); it++){
+        nbRessource++;
+    }
+    return nbRessource;
+}
+
+std::string Diagramme::getRessourceLibre(Tache t){
+    std::vector<Ressource>::iterator it;
+    for(it = t.ressourceDispo.begin() ; it != t.ressourceDispo.end(); it++){
+        Ressource &r=getRessource((*it).name);
+        if(r.freeDate<=t.earlyDate)
+            return r.name;
+    }
+    return "";
+}
+
+void Diagramme::affectationRessource(){
+    //on cherche le nombre de niveau dans le graph
+    Tache omega=getTache("omega");
+    int levelMax=omega.level;
+    bool couplage;
+    std::string thisRessource;
+    
+    //on affecte les ressources au taches niveau par niveau
+    for(int currentLevel=1 ;currentLevel<=levelMax;currentLevel++){
+        std::vector<Tache> taches ;
+        std::vector<Tache>::iterator it;
+        taches=tacheLevel(currentLevel);
+        //pour chaque tache du niveau..
+        
+        for(it = taches.begin() ; it != taches.end(); it++){
+            Tache &t = *it;
+            //cout << t.name <<endl;
+            if(nombreRessourceForTache(t)==1){
+                //si la tache peut etre coupler a une seule ressource alors on regardes si elle est disponible
+                
+                thisRessource=(t.ressourceDispo.at(0)).name;
+                Ressource &r=getRessource(thisRessource);
+                
+                //on regarde si la ressource est disponible dés la date au plus tôt
+                if(r.freeDate<=t.earlyDate){
+                    //la ressource disponible --> on l'affecte + on fixe la date de liberation de ressource
+                    t.ressourceAffecter=r.name;
+                    r.freeDate=t.earlyDate+t.cost;
+                    
+                }else if(r.freeDate<=t.lateDate){//on regarde si elle sera disponible sans retarder le projet
+                    //la ressource sera disponible --> on l'affecte + on fixe la date de liberation de ressource + modification earlyDate + modification marge
+                    t.ressourceAffecter=r.name;
+                    r.freeDate=t.earlyDate+t.cost;
+                    t.earlyDate=r.freeDate;
+                    t.marge=t.lateDate-t.earlyDate;
+                    
+                }/*else{
+                    //imposible de liberer la ressource critique pour tache a partir de la date au plus tard --> retard dans le projet donc couplage imposible
+                }
+                 */
+            }else{
+                //la tache peut etre couplée à plusieurs ressources
+                thisRessource=getRessourceLibre(t);
+                if(thisRessource!=""){
+                    //on recupere la ressource concernet
+                    Ressource &r=getRessource(thisRessource);
+                }
+                //on selectionne une ressource libre
+                
+                //si aucune des ses ressources sont libre on attends qu'une se libére
+                
+                //sinon imposible
+            }
+        }
     }
 }
 
@@ -346,6 +471,7 @@ void Diagramme::init(std::string fileout, std::string ressources){
     
     //gestion des ressources &  allocation
     loadRessource(ressources);
+    affectationRessource();
     
     //gestion des fichiers de sorties
     display(fileout);

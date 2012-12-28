@@ -137,13 +137,13 @@ int main(int argc, char** argv) {
     if(argc>0)
         readFile(argv,diag);
     else{
-        cout << "no file name in argument"<<endl;
+        cout << "(1)no file name in argument"<<endl;
         return 0;
     }
     if(argv[2]){
         diag.init(argv[2],argv[3]);
     }else{
-        cout << "no file name for file out"<<endl;
+        cout << "(2)no file name for file out"<<endl;
     }
     return 1;
 }
