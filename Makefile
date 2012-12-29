@@ -28,4 +28,4 @@ zip:
 	tar -zcvf $(BIN).tar.gz $(SRC) $^
 
 run:
-	./$(BIN)
+	./$(BIN) liste_taches.txt resultat.txt ressources.txt 

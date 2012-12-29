@@ -36,7 +36,7 @@ public:
     Ressource& getRessource(std::string);
     void updateLevel();
     std::vector<std::string> seachNext(std::string );
-    std::vector<Tache> tacheLevel(int);
+    void tacheLevel(std::vector<Tache>& ,int );
     void updateAllLevel();
     void updateEarlyDate(std::string );
     void updateLateDate(std::string );
@@ -48,7 +48,7 @@ public:
     void displayForGraphviz();
     void loadRessource(std::string);
     std::string getRessourceLibre(Tache);
-    void affectationRessource();
+    void affectationsRessource();
     void init(std::string,std::string);
     
 };

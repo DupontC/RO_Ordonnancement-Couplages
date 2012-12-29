@@ -56,16 +56,19 @@ Tache Diagramme::getHighLevel(){
     return t;
 }
 
-std::vector<Tache> Diagramme::tacheLevel(int level){
-    std::vector<Tache> tacheLevel;
+void Diagramme::tacheLevel(std::vector<Tache>& tacheLevel,int level){
+    cout << "level1" <<endl;
+    //std::vector<Tache> tacheLevel;
     std::map<std::string, Tache>::iterator it;
     for(it = TacheList.begin() ; it != TacheList.end(); it++){
-        Tache tache = it->second;
+        Tache &tache = it->second;
+        //tache.ressourceAffecter="test";
         if(tache.level==level){
             tacheLevel.push_back(tache);
         }
     }
-    return tacheLevel;
+    cout << "level2" <<endl;
+    //return tacheLevel;
 }
 
 void Diagramme::addOmega(){
@@ -383,58 +386,84 @@ std::string Diagramme::getRessourceLibre(Tache t){
     return "";
 }
 
-void Diagramme::affectationRessource(){
+void Diagramme::ressourceTache(Tache &t){
+    
+}
+
+void Diagramme::affectationsRessource(){
     //on cherche le nombre de niveau dans le graph
     Tache omega=getTache("omega");
     int levelMax=omega.level;
     bool couplage;
     std::string thisRessource;
-    
+    cout << "test1" <<endl;
     //on affecte les ressources au taches niveau par niveau
     for(int currentLevel=1 ;currentLevel<=levelMax;currentLevel++){
-        std::vector<Tache> taches ;
         std::vector<Tache>::iterator it;
-        taches=tacheLevel(currentLevel);
+        std::vector<Tache> taches;
+        tacheLevel(taches,currentLevel);
         //pour chaque tache du niveau..
-        
+        cout << "test2" <<endl;
         for(it = taches.begin() ; it != taches.end(); it++){
-            Tache &t = *it;
-            //cout << t.name <<endl;
+            Tache t = *it;
+            
+            cout <<"name "<< t.name <<endl;
             if(nombreRessourceForTache(t)==1){
                 //si la tache peut etre coupler a une seule ressource alors on regardes si elle est disponible
-                
+                cout << "test3-1" <<endl;
                 thisRessource=(t.ressourceDispo.at(0)).name;
                 Ressource &r=getRessource(thisRessource);
                 
                 //on regarde si la ressource est disponible dés la date au plus tôt
-                if(r.freeDate<=t.earlyDate){
+                if(r.freeDate<=(t.earlyDate)){
                     //la ressource disponible --> on l'affecte + on fixe la date de liberation de ressource
-                    t.ressourceAffecter=r.name;
-                    r.freeDate=t.earlyDate+t.cost;
+                    cout <<"-1 "<< r.name<<endl;
+                    (t.ressourceAffecter)=r.name;
+                    r.freeDate=(t.earlyDate)+(t.cost);
+                    cout << "ressourceAffecter ---> "<<t.ressourceAffecter<<endl;
                     
                 }else if(r.freeDate<=t.lateDate){//on regarde si elle sera disponible sans retarder le projet
                     //la ressource sera disponible --> on l'affecte + on fixe la date de liberation de ressource + modification earlyDate + modification marge
+                    cout <<"-2 "<< r.name<<endl;
                     t.ressourceAffecter=r.name;
                     r.freeDate=t.earlyDate+t.cost;
                     t.earlyDate=r.freeDate;
                     t.marge=t.lateDate-t.earlyDate;
+                    cout << "ressourceAffecter ---> "<<t.ressourceAffecter<<endl;
                     
                 }/*else{
                     //imposible de liberer la ressource critique pour tache a partir de la date au plus tard --> retard dans le projet donc couplage imposible
                 }
                  */
-            }else{
-                //la tache peut etre couplée à plusieurs ressources
+            }else{//la tache peut etre couplée à plusieurs ressources
+                cout << "test3-2" <<endl;
+                //on regarde si une ressource est libre pour cette tache
                 thisRessource=getRessourceLibre(t);
                 if(thisRessource!=""){
                     //on recupere la ressource concernet
                     Ressource &r=getRessource(thisRessource);
+                    //on l'affecte + on fixe la date de liberation de ressource
+                    cout <<"-3 "<< r.name<<endl;
+                    t.ressourceAffecter=r.name;
+                    r.freeDate=t.earlyDate+t.cost;
+                    cout << "ressourceAffecter ---> "<<t.ressourceAffecter<<endl;
+                    
+                }else{//si aucune des ses ressources sont libre on attends qu'une se libére
+                    //on parcours les ressources qui peuvent etre couplées à la tache , et on regarde si on peut l'affecter de façon à ce que le tps <= latedate
+                    std::vector<Ressource>::iterator iit;
+                    for(iit = t.ressourceDispo.begin() ; iit != t.ressourceDispo.end(); iit++){
+                        Ressource &r=*iit;
+                        if(r.freeDate<=t.lateDate && t.ressourceAffecter!=""){//on regarde si elle sera disponible sans retarder le projet
+                            //la ressource sera disponible --> on l'affecte + on fixe la date de liberation de ressource + modification earlyDate + modification marge
+                            cout <<"-4 "<< r.name<<endl;
+                            t.ressourceAffecter=r.name;
+                            r.freeDate=t.earlyDate+t.cost;
+                            t.earlyDate=r.freeDate;
+                            t.marge=t.lateDate-t.earlyDate;
+                            cout << "ressourceAffecter ---> "<<t.ressourceAffecter<<endl;
+                        }
+                    }
                 }
-                //on selectionne une ressource libre
-                
-                //si aucune des ses ressources sont libre on attends qu'une se libére
-                
-                //sinon imposible
             }
         }
     }
@@ -471,7 +500,13 @@ void Diagramme::init(std::string fileout, std::string ressources){
     
     //gestion des ressources &  allocation
     loadRessource(ressources);
-    affectationRessource();
+    affectationsRessource();
+    
+    std::map<std::string, Tache>::iterator iit;
+    for(iit = TacheList.begin() ; iit != TacheList.end(); iit++){
+        Tache &tache = iit->second;
+        cout<<"---->"<<tache.ressourceAffecter<<endl;
+    }
     
     //gestion des fichiers de sorties
     display(fileout);

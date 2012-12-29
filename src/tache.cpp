@@ -54,6 +54,7 @@ void Tache::display(std::string fileOut){
         fichier <<"  earlyDate :" << earlyDate <<endl;
         fichier <<"  lateDate :"<< lateDate << endl;
         fichier <<"  marge :"<< marge<<endl;
+        fichier <<"  ressource :" << ressourceAffecter <<endl;
         fichier <<"  Critical :"<<resCritique << endl;
         fichier.close();
     }

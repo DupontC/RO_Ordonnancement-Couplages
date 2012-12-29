@@ -20,6 +20,8 @@ public:
     std::string name;
     int freeDate;
     bool busy;
+    std::string owner;
+    int level;
     
     Ressource(std::string,bool);
     

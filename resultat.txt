@@ -12,6 +12,7 @@ Nom tache : a
   earlyDate :0
   lateDate :0
   marge :0
+  ressource :
   Critical :true
 
 -----------------------------------
@@ -21,6 +22,7 @@ Nom tache : alpha
   earlyDate :0
   lateDate :0
   marge :0
+  ressource :
   Critical :true
 
 -----------------------------------
@@ -30,6 +32,7 @@ Nom tache : b
   earlyDate :7
   lateDate :12
   marge :5
+  ressource :
   Critical :false
 
 -----------------------------------
@@ -39,6 +42,7 @@ Nom tache : c
   earlyDate :12
   lateDate :17
   marge :5
+  ressource :
   Critical :false
 
 -----------------------------------
@@ -48,6 +52,7 @@ Nom tache : d
   earlyDate :13
   lateDate :19
   marge :6
+  ressource :
   Critical :false
 
 -----------------------------------
@@ -57,6 +62,7 @@ Nom tache : e
   earlyDate :20
   lateDate :20
   marge :0
+  ressource :
   Critical :true
 
 -----------------------------------
@@ -66,6 +72,7 @@ Nom tache : f
   earlyDate :7
   lateDate :7
   marge :0
+  ressource :
   Critical :true
 
 -----------------------------------
@@ -75,6 +82,7 @@ Nom tache : g
   earlyDate :15
   lateDate :18
   marge :3
+  ressource :
   Critical :false
 
 -----------------------------------
@@ -84,6 +92,7 @@ Nom tache : h
   earlyDate :15
   lateDate :15
   marge :0
+  ressource :
   Critical :true
 
 -----------------------------------
@@ -93,6 +102,7 @@ Nom tache : i
   earlyDate :16
   lateDate :16
   marge :0
+  ressource :
   Critical :true
 
 -----------------------------------
@@ -102,6 +112,7 @@ Nom tache : j
   earlyDate :18
   lateDate :18
   marge :0
+  ressource :
   Critical :true
 
 -----------------------------------
@@ -111,4 +122,5 @@ Nom tache : omega
   earlyDate :21
   lateDate :21
   marge :0
+  ressource :
   Critical :true
