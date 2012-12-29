@@ -36,7 +36,7 @@ public:
     Ressource& getRessource(std::string);
     void updateLevel();
     std::vector<std::string> seachNext(std::string );
-    void tacheLevel(std::vector<Tache>& ,int );
+    void tacheLevel(int );
     void updateAllLevel();
     void updateEarlyDate(std::string );
     void updateLateDate(std::string );
@@ -50,6 +50,7 @@ public:
     std::string getRessourceLibre(Tache);
     void affectationsRessource();
     void init(std::string,std::string);
+    void ressourceForTache(Tache &);
     
 };
 
