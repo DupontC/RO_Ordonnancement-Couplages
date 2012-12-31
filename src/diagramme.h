@@ -26,6 +26,7 @@ class Diagramme{
 public:
     std::map<std::string,Tache> TacheList;
     std::map<std::string,Ressource> ressources;
+    bool couplage;
     Diagramme();
     
     Tache getHighLevel();
@@ -38,6 +39,7 @@ public:
     std::vector<std::string> seachNext(std::string );
     void tacheLevel(int );
     void updateAllLevel();
+    void updateEarlyDateALL();
     void updateEarlyDate(std::string );
     void updateLateDate(std::string );
     void updateLateDate2(std::string);

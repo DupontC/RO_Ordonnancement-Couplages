@@ -134,6 +134,7 @@ int readFile(char ** fileName, Diagramme &diag){
  */
 int main(int argc, char** argv) {
     Diagramme diag;
+    diag.couplage=true;
     if(argc>0)
         readFile(argv,diag);
     else{

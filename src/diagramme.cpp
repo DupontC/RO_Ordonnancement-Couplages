@@ -40,6 +40,8 @@ std::vector<std::string> split2(const std::string &s, char delim) {
     return split2(s, delim, elems);
 }
 
+
+
 Tache Diagramme::getHighLevel(){
     std::string highLevelTache="alpha";
     int level=0;
@@ -162,6 +164,20 @@ std::vector<std::string> Diagramme::seachNext(std::string t0){
     }
     return next;
 }
+void Diagramme::updateEarlyDateALL(){
+    std::map<std::string, Tache>::iterator it;
+    std::vector<std::string>::iterator it2;
+    int start=0;
+    for(it = TacheList.begin() ; it != TacheList.end(); it++){
+        Tache tache=it->second;
+        for(it2=tache.previous.begin();it2 != tache.previous.end();it2++){
+            if(start==0 && strcmp("alpha",(*it2).c_str())==0){
+                updateEarlyDate(*it2);
+                start=1;
+            }
+        }
+    }
+}
 
 void Diagramme::updateEarlyDate(std::string name){
     std::vector<std::string> next;
@@ -224,12 +240,22 @@ void Diagramme::diplayCritiqueWay(std::string fileOut){
 }
 
 void Diagramme::display(std::string fileOut){
-    std::map<std::string, Tache>::iterator it;
-    
-    diplayCritiqueWay(fileOut);
-    for(it = TacheList.begin() ; it != TacheList.end(); it++){
-        Tache t=it->second;
-        t.display(fileOut);
+    if(couplage==true){
+        std::map<std::string, Tache>::iterator it;
+        diplayCritiqueWay(fileOut);
+        for(it = TacheList.begin() ; it != TacheList.end(); it++){
+            Tache t=it->second;
+            t.display(fileOut);
+        }
+    }else{
+        ofstream fichier(fileOut.c_str(), ios::out|ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+        if(fichier)
+        {
+            fichier <<"Imposible de faire le couplage des ressources sans augmenter la durée du projet"<<endl;
+            fichier.close();
+            
+        }else
+            cerr << "Impossible d'ouvrir le fichier !" << endl;
     }
 }
 
@@ -251,7 +277,7 @@ void Diagramme::linkForGraphviz(Tache &t1, Tache &t2){
         fichier.close();
         t1.displayForGraphviz();
         fichier.open("graphviz.dot", ios::out|ios::app);
-        fichier <<"[style=bold];"<<endl;
+        fichier <<"[style=bold label=\""<<t2.ressourceAffecter<<"\"];"<<endl;
         fichier.close();
         
     }else
@@ -358,9 +384,6 @@ void Diagramme::loadRessource(std::string fileRessource){
     }
 }
 
-bool ressourceDispo(std::string name){
-    
-}
 
 int nombreRessourceForTache(Tache t){
     std::vector<Ressource>::iterator it;
@@ -382,54 +405,61 @@ std::string Diagramme::getRessourceLibre(Tache t){
 }
 
 void Diagramme::ressourceForTache(Tache &t){
-        std::string thisRessource;
-        if(nombreRessourceForTache(t)==1){
-            //si la tache peut etre coupler a une seule ressource alors on regardes si elle est disponible
-            thisRessource=(t.ressourceDispo.at(0)).name;
-            Ressource &r=getRessource(thisRessource);
+    std::string thisRessource;
+    if(nombreRessourceForTache(t)==1){
+        //si la tache peut etre coupler a une seule ressource alors on regardes si elle est disponible
+        thisRessource=(t.ressourceDispo.at(0)).name;
+        Ressource &r=getRessource(thisRessource);
+        
+        //on regarde si la ressource est disponible dés la date au plus tôt
+        if(r.freeDate<=(t.earlyDate)){
+            //la ressource disponible --> on l'affecte + on fixe la date de liberation de ressource
+            (t.ressourceAffecter)=r.name;
+            r.freeDate=(t.earlyDate)+(t.cost);
+            updateEarlyDateALL();
             
-            //on regarde si la ressource est disponible dés la date au plus tôt
-            if(r.freeDate<=(t.earlyDate)){
-                //la ressource disponible --> on l'affecte + on fixe la date de liberation de ressource
-                (t.ressourceAffecter)=r.name;
-                r.freeDate=(t.earlyDate)+(t.cost);
-                
-            }else if(r.freeDate<=t.lateDate){//on regarde si elle sera disponible sans retarder le projet
-                //la ressource sera disponible --> on l'affecte + on fixe la date de liberation de ressource + modification earlyDate + modification marge
-                t.ressourceAffecter=r.name;
-                r.freeDate=t.earlyDate+t.cost;
-                t.earlyDate=r.freeDate;
-                t.marge=t.lateDate-t.earlyDate;
-                
-            }/*else{
-              //imposible de liberer la ressource critique pour tache a partir de la date au plus tard --> retard dans le projet donc couplage imposible
-              }
-              */
-        }else{//la tache peut etre couplée à plusieurs ressources
-            //on regarde si une ressource est libre pour cette tache
-            thisRessource=getRessourceLibre(t);
-            if(thisRessource!=""){
-                //on recupere la ressource concernet
-                Ressource &r=getRessource(thisRessource);
-                //on l'affecte + on fixe la date de liberation de ressource
-                t.ressourceAffecter=r.name;
-                r.freeDate=t.earlyDate+t.cost;
-                
-            }else{//si aucune des ses ressources sont libre on attends qu'une se libére
-                //on parcours les ressources qui peuvent etre couplées à la tache , et on regarde si on peut l'affecter de façon à ce que le tps <= latedate
-                std::vector<Ressource>::iterator iit;
-                for(iit = t.ressourceDispo.begin() ; iit != t.ressourceDispo.end(); iit++){
-                    Ressource &r=*iit;
-                    if(r.freeDate<=t.lateDate && t.ressourceAffecter!=""){//on regarde si elle sera disponible sans retarder le projet
-                        //la ressource sera disponible --> on l'affecte + on fixe la date de liberation de ressource + modification earlyDate + modification marge
-                        t.ressourceAffecter=r.name;
-                        r.freeDate=t.earlyDate+t.cost;
-                        t.earlyDate=r.freeDate;
-                        t.marge=t.lateDate-t.earlyDate;
-                    }
+        }else if(r.freeDate<=t.lateDate){//on regarde si elle sera disponible sans retarder le projet
+            //la ressource sera disponible --> on l'affecte + on fixe la date de liberation de ressource + modification earlyDate + modification marge
+            t.ressourceAffecter=r.name;
+            r.freeDate=t.earlyDate+t.cost;
+            t.earlyDate=r.freeDate;
+            t.marge=t.lateDate-t.earlyDate;
+            updateEarlyDateALL();
+            
+        }else{
+            cout <<"couplage imposible"<<endl;
+            couplage=false;
+        }
+    }else{//la tache peut etre couplée à plusieurs ressources
+        //on regarde si une ressource est libre pour cette tache
+        thisRessource=getRessourceLibre(t);
+        if(thisRessource!=""){
+            //on recupere la ressource concernet
+            Ressource &r=getRessource(thisRessource);
+            //on l'affecte + on fixe la date de liberation de ressource
+            t.ressourceAffecter=r.name;
+            r.freeDate=t.earlyDate+t.cost;
+            updateEarlyDateALL();
+            
+        }else{//si aucune des ses ressources sont libre on attends qu'une se libére
+            //on parcours les ressources qui peuvent etre couplées à la tache , et on regarde si on peut l'affecter de façon à ce que le tps <= latedate
+            std::vector<Ressource>::iterator iit;
+            for(iit = t.ressourceDispo.begin() ; iit != t.ressourceDispo.end(); iit++){
+                Ressource &r=*iit;
+                if(r.freeDate<=t.lateDate && t.ressourceAffecter!=""){//on regarde si elle sera disponible sans retarder le projet
+                    //la ressource sera disponible --> on l'affecte + on fixe la date de liberation de ressource + modification earlyDate + modification marge
+                    t.ressourceAffecter=r.name;
+                    r.freeDate=t.earlyDate+t.cost;
+                    t.earlyDate=r.freeDate;
+                    t.marge=t.lateDate-t.earlyDate;
+                    updateEarlyDateALL();
+                }else{
+                    cout <<"couplage imposible"<<endl;
+                    couplage=false;
                 }
             }
         }
+    }
 }
 
 void Diagramme::affectationsRessource(){
@@ -450,19 +480,7 @@ void Diagramme::init(std::string fileout, std::string ressources){
     updateAllLevel();
     addOmega();
     
-    std::map<std::string, Tache>::iterator it;
-    std::vector<std::string>::iterator it2;
-    
-    int start=0;
-    for(it = TacheList.begin() ; it != TacheList.end(); it++){
-        Tache tache=it->second;
-        for(it2=tache.previous.begin();it2 != tache.previous.end();it2++){
-            if(start==0 && strcmp("alpha",(*it2).c_str())==0){
-                updateEarlyDate(*it2);
-                start=1;
-            }
-        }
-    }
+    updateEarlyDateALL();
     
     Tache &omega=getTache2("omega");
     //gestion des date au plutot
@@ -477,18 +495,14 @@ void Diagramme::init(std::string fileout, std::string ressources){
     loadRessource(ressources);
     affectationsRessource();
     
-    std::map<std::string, Tache>::iterator iit;
-    for(iit = TacheList.begin() ; iit != TacheList.end(); iit++){
-        Tache &tache = iit->second;
-        cout<<tache.name<<" --R--> "<<tache.ressourceAffecter<<endl;
-    }
-    
     //gestion des fichiers de sorties
     display(fileout);
-    displayForGraphviz();
-    //affichage des diagrammes .dot si Graphviz est présent sous Unix
-    cout << "Affichage du diagrammes de potentiel-taches dans un terminal x11 et géneration du diagramme en format png " <<endl;
-    cout << "ATTENTION MESSAGES D'ERREUR SI GRAPHVIZ EST PAS INSTALLÉ SUR LA MACHINE UNIX --> A NE PAS PRENDRE EN COMPTE DANS CE CAS" <<endl;
-    system("dot -Tx11 graphviz.dot");
-    system("dot -Tpng graphviz.dot > diagramme_perte.png");
+    if(couplage==true){
+        displayForGraphviz();
+        //affichage des diagrammes .dot si Graphviz est présent sous Unix
+        cout << "Affichage du diagrammes de potentiel-taches dans un terminal x11 et géneration du diagramme en format png " <<endl;
+        cout << "ATTENTION MESSAGES D'ERREUR SI GRAPHVIZ EST PAS INSTALLÉ SUR LA MACHINE UNIX --> A NE PAS PRENDRE EN COMPTE DANS CE CAS" <<endl;
+        system("dot -Tx11 graphviz.dot");
+        system("dot -Tpng graphviz.dot > diagramme_perte.png");
+    }
 }
