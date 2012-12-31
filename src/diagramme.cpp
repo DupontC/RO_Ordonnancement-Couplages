@@ -1,10 +1,10 @@
-//
-//  diagramme.cpp
-//  reecherche_operationel
-//
-//  Created by Cyril_Dupont on 16/11/12.
-//
-//
+
+/**
+ * \file diagramme.cpp
+ * \author  Cyril Dupont
+ * \date    16/11/12
+ * \brief Ensemble des fonctions qui réalise les opérations sur le graph.
+ */
 
 #include "diagramme.h"
 
@@ -30,9 +30,9 @@ std::vector<std::string> &split2(const std::string &s, char delim, std::vector<s
 }
 
 /**
- * \fn split
+ * \fn split2
  * \param s String
- * \param delim String
+ * \param delim char
  * \brief Fonction pour spliter une string
  */
 std::vector<std::string> split2(const std::string &s, char delim) {
@@ -41,7 +41,10 @@ std::vector<std::string> split2(const std::string &s, char delim) {
 }
 
 
-
+/**
+ * \fn getHighLevel
+ * \return La Tache qui est la plus profonde du graph 
+ */
 Tache Diagramme::getHighLevel(){
     std::string highLevelTache="alpha";
     int level=0;
@@ -58,6 +61,10 @@ Tache Diagramme::getHighLevel(){
     return t;
 }
 
+/**
+ * \fn tacheLevel
+ * \param level int affin de traiter les taches d'un level
+ */
 void Diagramme::tacheLevel(int level){
     std::map<std::string, Tache>::iterator it;
     for(it = TacheList.begin() ; it != TacheList.end(); it++){
@@ -68,6 +75,9 @@ void Diagramme::tacheLevel(int level){
     }
 }
 
+/**
+ * \fn addOmega
+ */
 void Diagramme::addOmega(){
     int cost=0,nb_succ=0;
     Tache tache=getHighLevel();
@@ -91,6 +101,9 @@ void Diagramme::addOmega(){
     
 }
 
+/**
+ * \fn addAlpha
+ */
 void Diagramme::addAlpha(){
     std::vector<std::string> previous;
     std::map<std::string, Tache>::iterator it;
@@ -108,6 +121,11 @@ void Diagramme::addAlpha(){
     TacheList.insert(pair<std::string, Tache>("alpha", alpha));
 }
 
+/**
+ * \fn getTache
+ * \param key String  Le nom de la tache à renvoyer
+ * \return Tache. Une tache du graph correspondant au nom passer en parametre
+ */
 Tache Diagramme::getTache(std::string key){
     std::map<std::string, Tache>::iterator it;
     it = TacheList.find(key);
@@ -115,6 +133,11 @@ Tache Diagramme::getTache(std::string key){
         return it->second;
 }
 
+/**
+ * \fn getTache2
+ * \param key String  Le nom de la tache à renvoyer
+ * \return Tache avec référence. Une tache du graph correspondant au nom passer en parametre
+ */
 Tache& Diagramme::getTache2(std::string key){
     std::map<std::string, Tache>::iterator it;
     it = TacheList.find(key);
@@ -122,6 +145,11 @@ Tache& Diagramme::getTache2(std::string key){
         return it->second;
 }
 
+/**
+ * \fn getRessource
+ * \param key String  Le nom de la ressource à renvoyer
+ * \return Ressource avec reference .Une Ressource du graph correspondant au nom passer en parametre
+ */
 Ressource& Diagramme::getRessource(std::string key){
     std::map<std::string, Ressource>::iterator it;
     it = ressources.find(key);
@@ -129,6 +157,9 @@ Ressource& Diagramme::getRessource(std::string key){
         return it->second;
 }
 
+/**
+ * \fn updateLevel
+ */
 void Diagramme::updateLevel() {
     std::map<std::string, Tache>::iterator it;
     std::vector<std::string>::iterator it2;
@@ -144,12 +175,19 @@ void Diagramme::updateLevel() {
 }
 
 
+/**
+ * \fn updateAllLevel
+ */
 void Diagramme::updateAllLevel(){
     updateLevel();
     updateLevel();
     updateLevel();
 }
 
+/**
+ * \fn seachNext
+ * \param t0 String.  Le nom de la tache, affin de savoir ses taches suivantes
+ * \return Un vecteur de String. Les string correspondes au nom des taches suivanates */
 std::vector<std::string> Diagramme::seachNext(std::string t0){
     std::vector<std::string> next;
     std::map<std::string, Tache>::iterator it;
@@ -164,6 +202,10 @@ std::vector<std::string> Diagramme::seachNext(std::string t0){
     }
     return next;
 }
+
+/**
+ * \fn updateEarlyDateALL
+ */
 void Diagramme::updateEarlyDateALL(){
     std::map<std::string, Tache>::iterator it;
     std::vector<std::string>::iterator it2;
@@ -179,6 +221,10 @@ void Diagramme::updateEarlyDateALL(){
     }
 }
 
+/**
+ * \fn updateEarlyDate
+ * \param name String . MAJ de la date au plus tot de la tache donnée.
+ */
 void Diagramme::updateEarlyDate(std::string name){
     std::vector<std::string> next;
     std::string alpha="alpha";
@@ -198,6 +244,10 @@ void Diagramme::updateEarlyDate(std::string name){
     
 }
 
+/**
+ * \fn updateLateDate
+ * \param name String . MAJ de la date au plus tard de la tache donnée.
+ */
 void Diagramme::updateLateDate(std::string name){
     Tache &courant=getTache2(name);
     std::vector<std::string>::iterator it;
@@ -213,10 +263,15 @@ void Diagramme::updateLateDate(std::string name){
 }
 
 
-
+/**
+ * \fn diplayCritiqueWay
+ * \param fileOut String. Nom du fichier de sortie (resultat)
+ * \brief Ecrie le chemin critique dans le fichier de resultat
+ */
 void Diagramme::diplayCritiqueWay(std::string fileOut){
     std::map<std::string, Tache>::iterator it;
-    ofstream fichier(fileOut.c_str(), ios::out|ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+    std::string monFichier="./resultats/"+fileOut;
+    ofstream fichier(monFichier.c_str(), ios::out|ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
     if(fichier)
     {
         Tache &omega=getTache2("omega");
@@ -239,6 +294,11 @@ void Diagramme::diplayCritiqueWay(std::string fileOut){
     
 }
 
+/**
+ * \fn display
+ * \param fileOut String. Nom du fichier de sortie (resultat)
+ * \brief Les informations sur chaques tache (earlyDate, lastDate, ressource...) dans le fichier de sortie (resultat)
+ */
 void Diagramme::display(std::string fileOut){
     if(couplage==true){
         std::map<std::string, Tache>::iterator it;
@@ -248,7 +308,8 @@ void Diagramme::display(std::string fileOut){
             t.display(fileOut);
         }
     }else{
-        ofstream fichier(fileOut.c_str(), ios::out|ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+        std::string monFichier="./resultats/"+fileOut;
+        ofstream fichier(monFichier.c_str(), ios::out|ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
         if(fichier)
         {
             fichier <<"Imposible de faire le couplage des ressources sans augmenter la durée du projet"<<endl;
@@ -259,8 +320,11 @@ void Diagramme::display(std::string fileOut){
     }
 }
 
+/**
+ * \fn closeFileGraphviz
+ */
 void Diagramme::closeFileGraphviz(){
-    ofstream fichier("graphviz.dot", ios::out|ios::app);  // ouverture en écriture avec effacement du fichier ouvert
+    ofstream fichier("./resultats/graphviz.dot", ios::out|ios::app);  // ouverture en écriture avec effacement du fichier ouvert
     if(fichier)
     {
         fichier<<"}";
@@ -268,15 +332,21 @@ void Diagramme::closeFileGraphviz(){
         cerr << "Impossible d'ouvrir le fichier !" << endl;
 }
 
+/**
+ * \fn linkForGraphviz
+ * \param &t1 Tache.
+ * \param &t2 Tache.
+ * \brief Methode qui permet de faire le liens entre 2 taches en notation graphiz
+ */
 void Diagramme::linkForGraphviz(Tache &t1, Tache &t2){
-    ofstream fichier("graphviz.dot", ios::out|ios::app);  // ouverture en écriture avec effacement du fichier ouvert
+    ofstream fichier("./resultats/graphviz.dot", ios::out|ios::app);  // ouverture en écriture avec effacement du fichier ouvert
     t2.displayForGraphviz();
     if(fichier)
     {
         fichier <<" -> ";
         fichier.close();
         t1.displayForGraphviz();
-        fichier.open("graphviz.dot", ios::out|ios::app);
+        fichier.open("./resultats/graphviz.dot", ios::out|ios::app);
         fichier <<"[style=bold label=\""<<t2.ressourceAffecter<<"\"];"<<endl;
         fichier.close();
         
@@ -285,10 +355,13 @@ void Diagramme::linkForGraphviz(Tache &t1, Tache &t2){
     
 }
 
+/**
+ * \fn displayForGraphviz
+ */
 void Diagramme::displayForGraphviz(){
     std::map<std::string, Tache>::iterator it;
     std::vector<std::string>::iterator it2;
-    ofstream fichier("graphviz.dot", ios::out|ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+    ofstream fichier("./resultats/graphviz.dot", ios::out|ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
     if(fichier)
     {
         fichier <<"digraph G{"<<endl;
@@ -315,6 +388,11 @@ void Diagramme::displayForGraphviz(){
     closeFileGraphviz();
 }
 
+/**
+ * \fn loadRessource
+ * \param fileRessource String
+ * \brief Fonction qui charge en memoire les contraintes de ressources.
+ */
 void Diagramme::loadRessource(std::string fileRessource){
     std::ifstream text;
     std::string name;
@@ -385,6 +463,11 @@ void Diagramme::loadRessource(std::string fileRessource){
 }
 
 
+/**
+ * \fn nombreRessourceForTache
+ * \param t Tache. La tache pour laquel on veut savoir son nombre de ressource possible à affecter
+ * \return int . Le nombre de ressource qui peuvent etre affecté à cette tache
+ */
 int nombreRessourceForTache(Tache t){
     std::vector<Ressource>::iterator it;
     int nbRessource=0;
@@ -394,6 +477,11 @@ int nombreRessourceForTache(Tache t){
     return nbRessource;
 }
 
+/**
+ * \fn getRessourceLibre
+ * \param t Tache. La tache au quel on veut trouver une ressource disponible à affecter.
+ * \return Retourne le nom d'un ressource libre qui peut etre affectée
+ */
 std::string Diagramme::getRessourceLibre(Tache t){
     std::vector<Ressource>::iterator it;
     for(it = t.ressourceDispo.begin() ; it != t.ressourceDispo.end(); it++){
@@ -404,6 +492,10 @@ std::string Diagramme::getRessourceLibre(Tache t){
     return "";
 }
 
+/**
+ * \fn ressourceForTache
+ * \param &t Tache. Une tache au quel on va affecter ou non , une ressource disponbile.
+ */
 void Diagramme::ressourceForTache(Tache &t){
     std::string thisRessource;
     if(nombreRessourceForTache(t)==1){
@@ -462,6 +554,9 @@ void Diagramme::ressourceForTache(Tache &t){
     }
 }
 
+/**
+ * \fn affectationsRessource
+ */
 void Diagramme::affectationsRessource(){
     //on cherche le nombre de niveau dans le graph
     Tache omega=getTache("omega");
@@ -474,6 +569,11 @@ void Diagramme::affectationsRessource(){
     }
 }
 
+/**
+ * \fn init
+ * \param fileOut String. Le nom du fichier de sortie (resultat)
+ * \param ressources String. Le nom du fichier ayant les ressources
+ */
 void Diagramme::init(std::string fileout, std::string ressources){
     //creation du graphe
     addAlpha();
@@ -502,7 +602,7 @@ void Diagramme::init(std::string fileout, std::string ressources){
         //affichage des diagrammes .dot si Graphviz est présent sous Unix
         cout << "Affichage du diagrammes de potentiel-taches dans un terminal x11 et géneration du diagramme en format png " <<endl;
         cout << "ATTENTION MESSAGES D'ERREUR SI GRAPHVIZ EST PAS INSTALLÉ SUR LA MACHINE UNIX --> A NE PAS PRENDRE EN COMPTE DANS CE CAS" <<endl;
-        system("dot -Tx11 graphviz.dot");
-        system("dot -Tpng graphviz.dot > diagramme_perte.png");
+        system("dot -Tx11 ./resultats/graphviz.dot");
+        system("dot -Tpng ./resultats/graphviz.dot > ./resultats/diagramme_perte.png");
     }
 }

@@ -1,10 +1,9 @@
-//
-//  diagramme.h
-//  reecherche_operationel
-//
-//  Created by Cyril_Dupont on 16/11/12.
-//
-//
+/**
+ * \file diagramme.h
+ * \author  Cyril Dupont
+ * \date    16/11/12
+ * \brief Declaration de la class Diagramme avec le prototype des fonctions
+ */
 
 
 #ifndef reecherche_operationel_diagramme_h
@@ -20,8 +19,10 @@
 #include <stdio.h>
 #include "tache.h"
 #include <fstream>
-//#include <iostream>
 
+/**
+ * \class Diagramme. Permet de crée un diagramme composer de taches et de ressources
+ */
 class Diagramme{
 public:
     std::map<std::string,Tache> TacheList;

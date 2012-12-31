@@ -1,0 +1,126 @@
+-----------------------------------
+CRITICAL PATH
+-----------------------------------
+
+alpha - a - f - h - i - j - e - omega - 
+
+
+-----------------------------------
+Nom tache : a
+  cost :7
+  level :1
+  earlyDate :0
+  lateDate :0
+  marge :0
+  ressource :1
+  Critical :true
+
+-----------------------------------
+Nom tache : alpha
+  cost :0
+  level :0
+  earlyDate :0
+  lateDate :0
+  marge :0
+  ressource :
+  Critical :true
+
+-----------------------------------
+Nom tache : b
+  cost :5
+  level :2
+  earlyDate :7
+  lateDate :12
+  marge :5
+  ressource :2
+  Critical :false
+
+-----------------------------------
+Nom tache : c
+  cost :1
+  level :3
+  earlyDate :12
+  lateDate :17
+  marge :5
+  ressource :1
+  Critical :false
+
+-----------------------------------
+Nom tache : d
+  cost :1
+  level :4
+  earlyDate :13
+  lateDate :19
+  marge :6
+  ressource :2
+  Critical :false
+
+-----------------------------------
+Nom tache : e
+  cost :1
+  level :6
+  earlyDate :20
+  lateDate :20
+  marge :0
+  ressource :2
+  Critical :true
+
+-----------------------------------
+Nom tache : f
+  cost :8
+  level :2
+  earlyDate :7
+  lateDate :7
+  marge :0
+  ressource :3
+  Critical :true
+
+-----------------------------------
+Nom tache : g
+  cost :2
+  level :4
+  earlyDate :15
+  lateDate :18
+  marge :3
+  ressource :2
+  Critical :false
+
+-----------------------------------
+Nom tache : h
+  cost :1
+  level :3
+  earlyDate :15
+  lateDate :15
+  marge :0
+  ressource :1
+  Critical :true
+
+-----------------------------------
+Nom tache : i
+  cost :2
+  level :4
+  earlyDate :16
+  lateDate :16
+  marge :0
+  ressource :1
+  Critical :true
+
+-----------------------------------
+Nom tache : j
+  cost :2
+  level :5
+  earlyDate :18
+  lateDate :18
+  marge :0
+  ressource :1
+  Critical :true
+
+-----------------------------------
+Nom tache : omega
+  cost :0
+  level :7
+  earlyDate :21
+  lateDate :21
+  marge :0
+  ressource :
+  Critical :true
