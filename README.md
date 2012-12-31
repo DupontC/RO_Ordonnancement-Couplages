@@ -12,13 +12,12 @@ RO Ordonnancement - Couplages
           $make zip
 
 • Run application :
-          $make run
-          
-          ou
-          
+          $make run          
           $./monProgramme maListeDesTaches.txt monFichierDeResultat.txt monFichierDeRessource.txt 
 
 ----------------------------------------------------------------------------------------------
-• Pour visualiser les diagramme il faut graphviz installer sur la machine : www.graphviz.org
+• Pour visualiser les diagrammeq il faut graphviz installer sur la machine : www.graphviz.org
+
 • Projet tester que sur mac
+
 ----------------------------------------------------------------------------------------------
