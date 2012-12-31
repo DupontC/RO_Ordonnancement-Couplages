@@ -1,6 +1,6 @@
 RO Ordonnancement - Couplages
 =============================
-/!\ Apres chaque execution du programme les resultats (format text et en graph sous graphviz) se trouve dans le repertoire ''resultat'' /!\
+/!\ Apres chaque execution du programme les resultats (format texte et en graph sous graphviz) se trouve dans le repertoire ''resultats'' /!\
 
 • Build project :
           $make
